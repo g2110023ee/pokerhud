@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="club.bluegem.pokerhud.ResultActivity">
+    tools:context="club.bluegem.pokerhud.ResultActivity"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:weightSum="1">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="304dp"
+        android:layout_height="wrap_content"
+        tools:context="club.bluegem.pokerhud.ResultActivity"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:weightSum="1"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp">
+        <Button
+            android:id="@+id/ResetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_reset" />
+
+        <TextView
+            android:id="@+id/HandText"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_result"
+            android:layout_marginRight="90dp"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/ResultList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
