@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">PokerHud</string>
+    <!-- Buttons Text -->
     <string name="button_game">Go to HUD</string>
     <string name="button_result">Play history</string>
-    <string name="login_text">Select menu!!!!</string>
-    <string name="game_text">You moved!!!!</string>
+    <string name="button_reset">HAND</string>
+    <string name="button_next">NEXT</string>
+    <string name="button_facebook">FBのログインボタンがここに来る予定</string>
+
+    <!-- Normal Text -->
+    <string name="text_topmenu">Select menu!!!!</string>
+    <string name="text_hand">HANDS : </string>
+    <string name="text_facebooklogin">Facebook Login</string>
 </resources>
