@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="club.bluegem.pokerhud.TopActivity"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:weightSum="1">
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="club.bluegem.pokerhud.TopActivity"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:weightSum="1">
+        <Button
+            android:id="@+id/ResetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_reset" />
+
+        <TextView
+            android:id="@+id/HandText"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_hand" />
+        <TextView
+            android:id="@+id/HandCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="5" />
+        <Button
+            android:id="@+id/NextHand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_next" />
+        </LinearLayout>
+
+    <ListView
+        android:id="@+id/PlayerList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>
