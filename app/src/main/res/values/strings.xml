@@ -7,9 +7,19 @@
     <string name="button_next">NEXT</string>
     <string name="button_facebook">FBのログインボタンがここに来る予定</string>
 
+    <!-- Toggle buttons Text -->
+    <string name="toggle_call">Call: </string>
+    <string name="toggle_raise">Raise: </string>
+
     <!-- Normal Text -->
     <string name="text_topmenu">Select menu!!!!</string>
     <string name="text_hand">HANDS : </string>
     <string name="text_facebooklogin">Facebook Login</string>
     <string name="text_result">Your Total Status</string>
+    <string name="text_seatnumber">Seat : </string>
+    <string name="text_playedhand">Played Hands : </string>
+    <string name="text_vpip">VPIP : </string>
+    <string name="text_pfr">PFR : </string>
+    <string name="text_blindsteal">BlindSteal : </string>
+    <string name="text_3bet">3bet : </string>
 </resources>
