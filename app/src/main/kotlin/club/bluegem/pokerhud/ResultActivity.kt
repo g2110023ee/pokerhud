@@ -5,6 +5,13 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import kotlinx.android.synthetic.main.result.*
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
+import com.facebook.FacebookCallback
+import com.facebook.login.LoginManager
+import com.facebook.CallbackManager
+
+
 
 class ResultActivity : Activity() {
 
@@ -16,4 +23,5 @@ class ResultActivity : Activity() {
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, result)
         resultList.adapter = adapter
     }
+
 }

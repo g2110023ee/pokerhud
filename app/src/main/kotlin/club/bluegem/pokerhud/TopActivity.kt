@@ -9,11 +9,22 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.GraphRequest
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
+import java.util.*
+import com.facebook.AccessToken
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 class TopActivity : AppCompatActivity(), View.OnClickListener {
+    private var callbackManager: CallbackManager? = null
     override fun onClick(p0: View?) {
         Toast.makeText(this, "未実装ですよ！！！！！", Toast.LENGTH_SHORT).show()
         this.setLoginStatus()
@@ -36,6 +47,7 @@ class TopActivity : AppCompatActivity(), View.OnClickListener {
             bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "button")
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
         }
+
         //Buttonの機能配置
         //Go to HUD(Game activity)
         val game_button: Button = findViewById(R.id.button_game) as Button
@@ -57,14 +69,51 @@ class TopActivity : AppCompatActivity(), View.OnClickListener {
                 bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Result")
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "button")
                 mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
-                if (v != null) changeResultActivity()
+                //FB logout test
+                LoginManager.getInstance().logOut()
+                //if (v != null) changeResultActivity()
             }
         })
 
         //Facebook login button
         val facebook_button: Button = findViewById(R.id.login_button) as Button
-        facebook_button.setOnClickListener(this)
+        this.callbackManager = CallbackManager.Factory.create()
+        facebook_button.setOnClickListener{
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"))
+        }
+        LoginManager.getInstance().registerCallback(callbackManager,object : FacebookCallback<LoginResult>{
+            override fun onSuccess(loginResult: LoginResult) {
+                val request = GraphRequest.newMeRequest(loginResult.accessToken
+                ) { obj, Response ->
+                    val facebookId = Response.jsonObject.getString("id")
+                    val facebookName = Response.jsonObject.getString("first_name")
+                    Log.e("facebookId in", facebookId)
+                    Log.e("facebookName in", facebookName)
+                }
+                val parameters = Bundle()
+                parameters.putString("fields", "id,first_name")
+                request.parameters = parameters
+                request.executeAsync()
+                Log.e("Logged in", request.toString())
+            }
+
+            override fun onCancel() {
+                Log.e("Abort", "Abort login")
+            }
+
+            override fun onError(exception: FacebookException) {
+                LoginManager.getInstance().logOut()
+                Log.e("Error", exception.toString())
+            }
+
+        })
+
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        callbackManager?.onActivityResult(requestCode, resultCode, data)
+    }
+
 
         //GameActivityにインテントを飛ばすメソッド
         fun changeHudActivity() {
