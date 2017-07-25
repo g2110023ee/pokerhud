@@ -21,13 +21,12 @@
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp">
         <Button
-            android:id="@+id/ResetButton"
+            android:id="@+id/button_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/button_reset" />
 
         <TextView
-            android:id="@+id/HandText"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

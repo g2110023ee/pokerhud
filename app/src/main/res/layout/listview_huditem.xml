@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="player"
+            type="club.bluegem.pokerhud.Player" />
+    </data>
+<LinearLayout
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="65dp">
+
+    <!-- Player seat and activate -->
+    <LinearLayout
+        android:layout_width="69dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+        <LinearLayout
+            android:layout_width="69dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_seatnumber" />
+            <TextView
+            android:id="@+id/text_playerposition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{player.seatNumber}" />
+        </LinearLayout>
+        <Switch
+            android:id="@+id/switch_seated"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <!-- Player's data section-->
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal">
+        <!-- 1st row, Total hands and called hands rate -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_playedhand" />
+            <TextView
+            android:id="@+id/text_palyedcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{player.playedHandCount}" />
+        </LinearLayout>
+        <!-- 2nd row, VPIP and PFR -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_vpip" />
+            <TextView
+                android:id="@+id/text_vpip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{player.vpip}"
+                android:layout_marginEnd="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_pfr"
+                android:layout_marginStart="5dp"/>
+            <TextView
+                android:id="@+id/text_pfr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{player.pfr}"
+                />
+            </LinearLayout>
+        <!-- 3rd row, Blind Steall and something -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_blindsteal" />
+            <TextView
+                android:id="@+id/text_blindsteal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{player.blindsteal}"
+                android:layout_marginEnd="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_3bet"
+                android:layout_marginStart="5dp"/>
+            <TextView
+                android:id="@+id/text_3bet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_3bet" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Action section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!-- Call section -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="end">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/toggle_call" />
+        <ToggleButton
+            android:id="@+id/toggle_call"
+            android:layout_width="55dp"
+            android:layout_height="35dp" />
+        </LinearLayout>
+        <!-- Raise section -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="end">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/toggle_raise" />
+            <ToggleButton
+                android:id="@+id/toggle_raise"
+                android:layout_width="55dp"
+                android:layout_height="35dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+</layout>
