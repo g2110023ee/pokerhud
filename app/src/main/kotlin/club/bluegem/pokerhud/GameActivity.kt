@@ -1,5 +1,6 @@
 package club.bluegem.pokerhud
 
+import android.app.Activity
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
@@ -14,7 +15,7 @@ import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
 import kotlinx.android.synthetic.main.game.*
 import kotlinx.android.synthetic.main.listview_huditem.*
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.game)
@@ -58,8 +59,6 @@ class GameActivity : AppCompatActivity() {
         val next_button: Button = button_nexthand
         next_button.setOnClickListener { v ->
             if (v != null) playHand.addHand()
-            players[1].addCalledHand()
-            players[8].addRaisedHand()
             playerNextHand(players)
             binding.hand= playHand
             adapter.notifyDataSetChanged()
@@ -77,9 +76,6 @@ class GameActivity : AppCompatActivity() {
             player[i].calc()
             if(player[i].dealer){
                 player[i].addDealerButton()
-                if(player[i].status){
-                    player[i].addDealerButtonRaised()
-                }
             }
 
         }
@@ -115,6 +111,13 @@ class HudAdapter(context: Context, val players: List<Player>) : ArrayAdapter<Pla
             binding = convertView.tag as ListviewHuditemBinding
         }
         binding?.player = getItem(position)
+        Log.d("position:", position.toString())
+        //Go to Result activity
+        binding?.toggleCall?.setOnCheckedChangeListener { _, _ -> players[position].addCalledHand() }
+        binding?.toggleRaise?.setOnCheckedChangeListener { _,_ ->
+            players[position].addRaisedHand()
+            if(players[position].dealer) players[position].addDealerButtonRaised()
+        }
         return binding?.root
     }
 }
@@ -202,17 +205,24 @@ data class Player(
      */
     fun calc() {
         //VPIP
-        val calcedVpip =
-                ((calledHandCount + raisedHandCount)/(playedHandCount.toInt())) * 100
+        val calcedVpip: Float =
+                ((calledHandCount + raisedHandCount)/(playedHandCount.toFloat())) * 100
         vpip = calcedVpip.toString()
+        Log.d("Player",seatNumber )
+        Log.d("PlayerVPIP",vpip )
+
+        Log.d("calledHandCount",calledHandCount.toString())
+        Log.d("raisedHandCount",raisedHandCount.toString())
+        Log.d("playedHandCount",playedHandCount)
+
         //Pre-Flop-Raise
         val calcedPfr =
-                ((raisedHandCount)/(playedHandCount.toInt())) * 100
+                ((raisedHandCount)/(playedHandCount.toFloat())) * 100
         pfr = calcedPfr.toString()
         //BlindSteal
         if(dealerButtonCount != 0) {
-            val calcedBlindsteal =
-                    (dealerButtonRaisedCount / dealerButtonCount) * 100
+            val calcedBlindsteal:Float =
+                    (dealerButtonRaisedCount / dealerButtonCount.toFloat()) * 100
             blindsteal = calcedBlindsteal.toString()
         }
     }
