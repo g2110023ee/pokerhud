@@ -22,4 +22,9 @@
     <string name="text_pfr">PFR : </string>
     <string name="text_blindsteal">BlindSteal : </string>
     <string name="text_3bet">3bet : </string>
+
+    <!-- Facebook -->
+    <string name="facebook_app_id">238224876690058</string>
+    <string name="fb_login_protocol_scheme">fb238224876690058</string>
+
 </resources>

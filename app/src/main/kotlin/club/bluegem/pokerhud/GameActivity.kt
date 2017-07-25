@@ -205,7 +205,7 @@ data class Player(
      */
     fun calc() {
         //VPIP
-        val calcedVpip: Float =
+        val calcedVpip =
                 ((calledHandCount + raisedHandCount)/(playedHandCount.toFloat())) * 100
         vpip = calcedVpip.toString()
         Log.d("Player",seatNumber )
@@ -221,7 +221,7 @@ data class Player(
         pfr = calcedPfr.toString()
         //BlindSteal
         if(dealerButtonCount != 0) {
-            val calcedBlindsteal:Float =
+            val calcedBlindsteal =
                     (dealerButtonRaisedCount / dealerButtonCount.toFloat()) * 100
             blindsteal = calcedBlindsteal.toString()
         }
