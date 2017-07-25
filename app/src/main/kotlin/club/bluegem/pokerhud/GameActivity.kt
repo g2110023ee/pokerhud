@@ -14,6 +14,8 @@ import club.bluegem.pokerhud.databinding.GameBinding
 import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
 import kotlinx.android.synthetic.main.game.*
 import kotlinx.android.synthetic.main.listview_huditem.*
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.crash.FirebaseCrash
 
 class GameActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,9 +130,6 @@ class HudAdapter(context: Context, val players: List<Player>) : ArrayAdapter<Pla
  * 変数:handCount(String)のみ
  */
 data class Hand(var handCount:String = "1"){
-    init {
-        handCount = "1"
-    }
     fun addHand(){
         val hands: Int = handCount.toInt()+1
         handCount="${hands}"
