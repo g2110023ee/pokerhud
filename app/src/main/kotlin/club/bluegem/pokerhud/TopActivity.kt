@@ -1,9 +1,9 @@
 package club.bluegem.pokerhud
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -18,8 +18,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crash.FirebaseCrash
 import java.util.*
 import android.app.ProgressDialog
+import kotlinx.android.synthetic.main.top.*
 
-class TopActivity : AppCompatActivity() {
+class TopActivity : Activity() {
     private var callbackManager: CallbackManager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         // Obtain the FirebaseAnalytics instance.
@@ -41,7 +42,7 @@ class TopActivity : AppCompatActivity() {
         setContentView(R.layout.top)
 
         //Facebook login button
-        val facebook_button: Button = findViewById(R.id.login_button) as Button
+        val facebook_button: Button = login_button as Button
         this.callbackManager = CallbackManager.Factory.create()
         facebook_button.setOnClickListener{
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"))
@@ -53,16 +54,12 @@ class TopActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             override fun onSuccess(loginResult: LoginResult) {
                 val progressDialog = ProgressDialog(this@TopActivity)
-                val intent = Intent(this@TopActivity, SignupActivity::class.java)
                 val request = GraphRequest.newMeRequest(loginResult.accessToken) { obj, Response ->
-                    intent.putExtra("ID",Response.jsonObject.getString("id"))
-                    intent.putExtra("Name",Response.jsonObject.getString("first_name"))
                     //ぐるぐる終わり
                     progressDialog.dismiss()
-                    //ここから既存会員かのチェックをするメソッドに飛んで既存会員ならHUD、新規ならサインアップに飛ばす処理が必要
-                    if(checkSignupStatus(Response.jsonObject.getString("id")))
-                    //ユーザ登録に飛ばす
-                    startActivity(intent)
+                    //ここから既存会員かのチェックをするメソッドに飛んで既存会員ならHUD、新規ならサインアップに飛ばす
+                    if(checkSignupStatus(Response.jsonObject.getString("id")))jumpToHudActivity()
+                    jumpToSignupActivity(Response.jsonObject.getString("id"),Response.jsonObject.getString("first_name"))
                 }
                 //読み込んだデータを処理
                 val requireParameters = Bundle()
@@ -111,6 +108,20 @@ class TopActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /***
+     * SingupActivityにインテントを飛ばす
+     * @param facebookID:String FacebookIDを要求
+     * @param facebookName:String Facebook上でのFirstNameを要求
+     */
+    fun jumpToSignupActivity(facebookID:String,facebookName:String){
+        val intent = Intent(this, SignupActivity::class.java)
+        intent.putExtra("ID",facebookID)
+        intent.putExtra("Name",facebookName)
+        //ユーザ登録に飛ばす
+        startActivity(intent)
+
+    }
+
     //checking login status.
     fun checkLoginStatus(): Boolean {
         val sharedPre: SharedPreferences =getSharedPreferences("loginStatus", Context.MODE_PRIVATE);
@@ -119,17 +130,20 @@ class TopActivity : AppCompatActivity() {
         return loginStatus
     }
 
-    //既に登録されているユーザかAPIを呼んで確認した結果既存ユーザであればHUDに飛ばすメソッド
+    /***
+     * 既に登録されているユーザかAPIを呼んで確認した結果を応答するメソッド
+     * @param facebookID:String FacebookのIDを要求
+     * @return boolean 既に登録のあるFacebookIDであればTrueを、なければFalseを返す
+     */
     fun checkSignupStatus(facebookID:String):Boolean{
         //OkHTTPでAPI叩くメソッド呼ぶ
-        if(accessApiCheckUserStatus(facebookID))
-            return true
-        jumpToHudActivity()
+        if(accessApiCheckUserStatus(facebookID)) return true
         return false
     }
 
     //APIにアクセスして既存ユーザかチェックする
     fun accessApiCheckUserStatus(facebookID:String):Boolean{
+        //okHTTPを呼ぶコードがここに入る。
         return true
     }
 }

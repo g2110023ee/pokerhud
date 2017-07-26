@@ -3,9 +3,7 @@ package club.bluegem.pokerhud
 import android.app.Activity
 import android.content.Context
 import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,18 +28,18 @@ class GameActivity : Activity() {
         //Making players
         /*
         ** TODO:
-        ** Playerの数を決め打ちで9人（大体のホールデムは9人MAX）にしているが
-        ** Conf画面を作ってユーザに決めさせたほうがよいのかもしれない
-        ** ないしは、IF上にPlayerを増やすボタンを設置する？
+        ** Playerの最大人数はgetMaxPlayer()をコールすることで取得するように修正（済）
+        ** Conf画面からMaxPlayerの値を変更できるように実装する
         **/
+        val maxPlayer = getMaxPlayer()
         val players = mutableListOf(Player(seatNumber = "1"))
-        for(i in 2..9){
+        for(i in 2..maxPlayer){
             players.add(Player(seatNumber = "$i"))
         }
 
         //TEST用のコード
-        players[1].status=true
-        players[8].status=true
+        players[1].playerStatus=true
+        players[8].playerStatus=true
 
         //HudAdapterによりPlayerListをList化
         val adapter = HudAdapter(this,players)
@@ -55,8 +53,8 @@ class GameActivity : Activity() {
             playerResetHand(players)
             binding.hand= playHand
             adapter.notifyDataSetChanged()
-            Log.d("Reset", "onClick")
         }
+
         //Next hand
         val next_button: Button = button_nexthand
         next_button.setOnClickListener { v ->
@@ -68,15 +66,30 @@ class GameActivity : Activity() {
     }
 
     /***
+     * 設定ファイルから最大プレーヤー数を取得するメソッド
+     * 現在はハードコーディング
+     * TODO:
+     * 設定画面を実装の上、設定から取得できるようにする
+     *
+     * @return maxPlayer: 設定上の最大人数
+     ***/
+    fun getMaxPlayer(): Int {
+        val maxPlayer= 9
+        return maxPlayer
+    }
+
+    /***
      * 次のハンドへ進むときの処理を全て代行するメソッド
      * ・各プレーヤーのハンドカウントを進めます
      * ・各プレーヤーの各種数字を計算します
+     *  @param player: Player型のListを要求します
+     *
      */
     fun playerNextHand(player: List<Player>){
-        for(i in 0..player.size-1) if(player[i].status) {
+        for(i in 0..player.size-1) if(player[i].playerStatus) {
             player[i].addHand()
             player[i].calc()
-            if(player[i].dealer){
+            if(player[i].dealerButton){
                 player[i].addDealerButton()
             }
 
@@ -86,6 +99,7 @@ class GameActivity : Activity() {
     /***
      * ハンド履歴をリセットするときの処理を全て代行するメソッド
      * ・各プレーヤーのハンド履歴を葬ります
+     *  @param player: Player型のListを要求します
      */
     fun playerResetHand(player: List<Player>){
         for(i in 0..player.size-1) player[i].resetAll()
@@ -94,7 +108,9 @@ class GameActivity : Activity() {
 
 /***
  * オリジナルのリストを表示するためにArrayAdapterをラッパーしたクラス
- * ・Bindingによる動的な変更に対応
+ * @param context: Contextを要求します
+ * @param players: Player型のListを要求します
+ * @property
  */
 class HudAdapter(context: Context, val players: List<Player>) : ArrayAdapter<Player>(context, 0, players) {
     var binding:ListviewHuditemBinding? = null
@@ -113,12 +129,11 @@ class HudAdapter(context: Context, val players: List<Player>) : ArrayAdapter<Pla
             binding = convertView.tag as ListviewHuditemBinding
         }
         binding?.player = getItem(position)
-        Log.d("position:", position.toString())
         //Go to Result activity
         binding?.toggleCall?.setOnCheckedChangeListener { _, _ -> players[position].addCalledHand() }
         binding?.toggleRaise?.setOnCheckedChangeListener { _,_ ->
             players[position].addRaisedHand()
-            if(players[position].dealer) players[position].addDealerButtonRaised()
+            if(players[position].dealerButton) players[position].addDealerButtonRaised()
         }
         return binding?.root
     }
@@ -126,8 +141,7 @@ class HudAdapter(context: Context, val players: List<Player>) : ArrayAdapter<Pla
 
 /***
  * Handを管理するデータクラス
- * class:Hand
- * 変数:handCount(String)のみ
+ * @property handCount: Int テーブルでの経過ハンド数
  */
 data class Hand(var handCount:String = "1"){
     fun addHand(){
@@ -141,39 +155,30 @@ data class Hand(var handCount:String = "1"){
 
 /****
  * Playerの情報を全て管理するデータクラス
- * class:Player
- * 変数:seatNumber(String)
- *      dealer(Boolean)
- *      status(Boolean)
- *      playedHandCount(String)
- *      calledHandCount(Int)
- *      raisedHandCount(Int)
- *      dealerButtonCount(Int)
- *      dealerButtonRaisedCount(Int)
- *      vpip(String)
- *      pfr(String)
- *      blindsteal(String)
  */
 data class Player(
-            val seatNumber:String,
-            var dealer: Boolean = false,
-            var status:Boolean = false,
-            var playedHandCount:String = "0",
-            var calledHandCount:Int = 0,
-            var raisedHandCount:Int = 0,
-            var dealerButtonCount:Int = 0,
-            var dealerButtonRaisedCount:Int = 0,
-            var vpip:String ="0",
-            var pfr:String = "0",
-            var blindsteal:String = "0"
+            val seatNumber: String,
+            var dealerButton: Boolean = false,
+            var playerStatus: Boolean = false,
+            var whoIsMe: Boolean = false,
+            var playedHandCount: String = "0",
+            var calledHandCount: Int = 0,
+            var raisedHandCount: Int = 0,
+            var dealerButtonCount: Int = 0,
+            var dealerButtonRaisedCount: Int = 0,
+            var vpipCalculation: String ="0",
+            var pfrCalculation: String = "0",
+            var blindstealCalculation: String = "0"
 
     ){
     /***
      * 着席ステータスの変更に利用する
      */
     fun changeStatus(){
-        if(this.status == false) this.status = true
-        if(this.status == true) this.status = false
+        when(this.playerStatus){
+            true -> this.playerStatus = false
+            false -> this.playerStatus = true
+        }
     }
     /**
      * プレーヤーのプレイハンド数をインクリメントするメソッド
@@ -183,6 +188,7 @@ data class Player(
     fun addHand(){
         this.playedHandCount = (this.playedHandCount.toInt()+1).toString()
     }
+
     fun addCalledHand(){
         this.calledHandCount++
     }
@@ -201,28 +207,23 @@ data class Player(
      * VPIP=（コールしたハンド数＋レイズしたハンド数）／総ハンド数
      * PFR=レイズしたハンド数／総ハンド数
      * BlindSteal=ディーラーボタンでレイズしたハンド数/ディーラーボタン回数
+     *
      */
     fun calc() {
         //VPIP
         val calcedVpip =
                 ((calledHandCount + raisedHandCount)/(playedHandCount.toFloat())) * 100
-        vpip = calcedVpip.toString()
-        Log.d("Player",seatNumber )
-        Log.d("PlayerVPIP",vpip )
-
-        Log.d("calledHandCount",calledHandCount.toString())
-        Log.d("raisedHandCount",raisedHandCount.toString())
-        Log.d("playedHandCount",playedHandCount)
+        vpipCalculation = calcedVpip.toString()
 
         //Pre-Flop-Raise
         val calcedPfr =
                 ((raisedHandCount)/(playedHandCount.toFloat())) * 100
-        pfr = calcedPfr.toString()
+        pfrCalculation = calcedPfr.toString()
         //BlindSteal
         if(dealerButtonCount != 0) {
             val calcedBlindsteal =
                     (dealerButtonRaisedCount / dealerButtonCount.toFloat()) * 100
-            blindsteal = calcedBlindsteal.toString()
+            blindstealCalculation = calcedBlindsteal.toString()
         }
     }
 
@@ -230,14 +231,14 @@ data class Player(
      * プレーヤーデータのリセットが必要になった場合リセットを行うメソッド
      */
     fun resetAll(){
-        status = false
+        playerStatus = false
         playedHandCount = "0"
         calledHandCount = 0
         raisedHandCount = 0
         dealerButtonCount = 0
         dealerButtonRaisedCount = 0
-        vpip = "0"
-        pfr = "0"
-        blindsteal = "0"
+        vpipCalculation = "0"
+        pfrCalculation = "0"
+        blindstealCalculation = "0"
     }
 }
