@@ -42,7 +42,7 @@ class TopActivity : Activity() {
         setContentView(R.layout.top)
 
         //Facebook login button
-        val facebook_button: Button = login_button as Button
+        val facebook_button: Button = login_button
         this.callbackManager = CallbackManager.Factory.create()
         facebook_button.setOnClickListener{
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"))
@@ -136,14 +136,9 @@ class TopActivity : Activity() {
      * @return boolean 既に登録のあるFacebookIDであればTrueを、なければFalseを返す
      */
     fun checkSignupStatus(facebookID:String):Boolean{
+        val model = TopModel();
         //OkHTTPでAPI叩くメソッド呼ぶ
-        if(accessApiCheckUserStatus(facebookID)) return true
+        if(model.accessApiCheckUserStatus(facebookID)) return true
         return false
-    }
-
-    //APIにアクセスして既存ユーザかチェックする
-    fun accessApiCheckUserStatus(facebookID:String):Boolean{
-        //okHTTPを呼ぶコードがここに入る。
-        return true
     }
 }
