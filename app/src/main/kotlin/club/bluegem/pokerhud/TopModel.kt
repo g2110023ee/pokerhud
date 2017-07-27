@@ -6,9 +6,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 
-/**
- * Created by 01020409 on 2017/07/26.
- */
 open class TopModel{
 
     fun accessApiCheckUserStatus(facebookID:String):Boolean{
@@ -36,6 +33,9 @@ open class TopModel{
                 return res
             }
         }.execute()
+
+    }
+    fun facebookLogin(){
 
     }
 }

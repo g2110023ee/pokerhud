@@ -11,20 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TopActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
-            android:name=".SignupActivity"
-            android:parentActivityName=".TopActivity" />
-        <activity
-            android:name=".GameActivity" />
-        <activity
-            android:name=".ResultActivity" />
+            android:name=".Fragment_Signup"/>
+        <activity android:name=".GameActivity" />
+        <activity android:name=".ResultActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -44,6 +34,13 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".HudMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
