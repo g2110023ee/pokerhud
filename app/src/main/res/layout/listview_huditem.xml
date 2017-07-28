@@ -75,7 +75,7 @@
                 android:id="@+id/text_vpip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{player.vpip}"
+                android:text="@{player.vpipCalculation}"
                 android:layout_marginEnd="5dp"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                 android:id="@+id/text_pfr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{player.pfr}"
+                android:text="@{player.pfrCalculation}"
                 />
             </LinearLayout>
         <!-- 3rd row, Blind Steall and something -->
@@ -103,7 +103,7 @@
                 android:id="@+id/text_blindsteal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{player.blindsteal}"
+                android:text="@{player.blindstealCalculation}"
                 android:layout_marginEnd="5dp"/>
             <TextView
                 android:layout_width="wrap_content"
