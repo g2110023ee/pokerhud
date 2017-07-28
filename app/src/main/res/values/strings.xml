@@ -22,7 +22,12 @@
     <string name="text_pfr">PFR : </string>
     <string name="text_blindsteal">BlindSteal : </string>
     <string name="text_3bet">3bet : </string>
-
+    <string name="text_ranking">RANKING</string>
+    <string name="text_conf">Configuration of Application</string>
+    <string name="text_tab_hud">HUD</string>
+    <string name="text_tab_result">RESLUT</string>
+    <string name="text_tab_ranking">RANKING</string>
+    <string name="text_tab_conf">CONFIG</string>
     <!-- Facebook -->
     <string name="facebook_app_id">238224876690058</string>
     <string name="fb_login_protocol_scheme">fb238224876690058</string>

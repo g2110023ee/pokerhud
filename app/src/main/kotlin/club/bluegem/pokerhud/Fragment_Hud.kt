@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Toast
-import club.bluegem.pokerhud.databinding.GameBinding
+import club.bluegem.pokerhud.databinding.FragmentHudBinding
 import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
 import kotlinx.android.synthetic.main.fragment_hud.*
 
@@ -21,14 +21,17 @@ class Fragment_Hud : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
+    }
+    override fun onActivityCreated(savedInstanceState: Bundle?)  {
+        super.onActivityCreated(savedInstanceState)
         //Handカウントの初期化
         val playHand = Hand()
         //Bindingの起動（Handカウント用）
-        //val binding : GameBinding = DataBindingUtil.setContentView(this@Fragment_Hud, R.layout.game)
-        //binding.hand= playHand
-        //Making players
+        val binding : FragmentHudBinding = FragmentHudBinding.bind(getView())
+        binding.hand= playHand
+
         /*
         ** TODO:
         ** Playerの最大人数はgetMaxPlayer()をコールすることで取得するように修正（済）
@@ -52,18 +55,18 @@ class Fragment_Hud : Fragment() {
         //Reset all
         val reset_button: Button = button_reset
         reset_button.setOnClickListener { v ->
-            if (v != null) playHand.resetHand()
+            playHand.resetHand()
             playerResetHand(players)
-            //binding.hand= playHand
+            binding.hand= playHand
             adapter.notifyDataSetChanged()
         }
 
         //Next hand
         val next_button: Button = button_nexthand
         next_button.setOnClickListener { v ->
-            if (v != null) playHand.addHand()
+            playHand.addHand()
             playerNextHand(players)
-            //binding.hand= playHand
+            binding.hand= playHand
             adapter.notifyDataSetChanged()
         }
     }
@@ -139,5 +142,8 @@ class Fragment_Hud : Fragment() {
             }
             return binding?.root
         }
+    }
+    interface hudFragmentListener{
+        fun onHudFragmentEvent(event:HudEvent)
     }
 }

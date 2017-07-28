@@ -61,17 +61,17 @@ data class Player(
         //VPIP
         val calcedVpip =
                 ((calledHandCount + raisedHandCount)/(playedHandCount.toFloat())) * 100
-        vpipCalculation = calcedVpip.toString()
+        vpipCalculation = String.format("%.2f",calcedVpip)
 
         //Pre-Flop-Raise
         val calcedPfr =
                 ((raisedHandCount)/(playedHandCount.toFloat())) * 100
-        pfrCalculation = calcedPfr.toString()
+        pfrCalculation = String.format("%.2f",calcedPfr)
         //BlindSteal
         if(dealerButtonCount != 0) {
             val calcedBlindsteal =
                     (dealerButtonRaisedCount / dealerButtonCount.toFloat()) * 100
-            blindstealCalculation = calcedBlindsteal.toString()
+            blindstealCalculation = String.format("%.2f",calcedBlindsteal)
         }
     }
 

@@ -1,6 +1,5 @@
 package club.bluegem.pokerhud
 
-import android.os.AsyncTask
 import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -18,7 +17,7 @@ open class TopModel{
     }
 
     fun getRequest(url:String){
-        object: HttpController(){
+        object: AsyncController(){
             override fun doInBackground(vararg p0: Void?): String{
                 var res: String = ""
                 try{

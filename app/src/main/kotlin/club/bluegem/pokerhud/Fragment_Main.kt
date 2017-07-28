@@ -21,7 +21,6 @@ class Fragment_Main : Fragment() {
         button_facebooklogin.setOnClickListener{ v ->
             val fragment: Fragment_Signup = Fragment_Signup()
             getFragmentManager().beginTransaction().replace(R.id.fragmentadapter,fragment).commit()
-
             topModel.facebookLogin()
         }
     }
