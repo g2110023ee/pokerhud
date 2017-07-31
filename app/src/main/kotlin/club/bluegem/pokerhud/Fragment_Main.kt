@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.fragment_signup.*
 
 class Fragment_Main : Fragment() {
     val topModel:TopModel = TopModel()
@@ -20,7 +19,7 @@ class Fragment_Main : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         button_facebooklogin.setOnClickListener{ v ->
             val fragment: Fragment_Signup = Fragment_Signup()
-            getFragmentManager().beginTransaction().replace(R.id.fragmentadapter,fragment).commit()
+            fragmentManager.beginTransaction().replace(R.id.fragmentadapter,fragment).commit()
             topModel.facebookLogin()
         }
     }

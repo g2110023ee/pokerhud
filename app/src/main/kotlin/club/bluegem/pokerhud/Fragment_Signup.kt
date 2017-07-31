@@ -17,9 +17,7 @@ class Fragment_Signup : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        button_signup.setOnClickListener{ v ->
-            Toast.makeText(getActivity(),"TEST", Toast.LENGTH_SHORT).show()
-        }
+
     }
 
 }

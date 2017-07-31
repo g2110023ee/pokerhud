@@ -15,7 +15,7 @@ class Fragment_Controller : Fragment() {
     }
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getChildFragmentManager().beginTransaction().add(R.id.fragmentadapter,Fragment_Main()).commit()
+        childFragmentManager.beginTransaction().add(R.id.fragmentadapter,Fragment_Main()).commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -1,7 +1,6 @@
 package club.bluegem.pokerhud
 
 import android.content.Context
-import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.Toast
 import club.bluegem.pokerhud.databinding.FragmentHudBinding
 import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
 import kotlinx.android.synthetic.main.fragment_hud.*
@@ -29,7 +27,7 @@ class Fragment_Hud : Fragment() {
         //Handカウントの初期化
         val playHand = Hand()
         //Bindingの起動（Handカウント用）
-        val binding : FragmentHudBinding = FragmentHudBinding.bind(getView())
+        val binding : FragmentHudBinding = FragmentHudBinding.bind(view)
         binding.hand= playHand
 
         /*
@@ -142,8 +140,5 @@ class Fragment_Hud : Fragment() {
             }
             return binding?.root
         }
-    }
-    interface hudFragmentListener{
-        fun onHudFragmentEvent(event:HudEvent)
     }
 }
