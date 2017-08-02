@@ -10,7 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="club.bluegem.pokerhud.Fragment_Hud"
+    tools:context="club.bluegem.pokerhud.FragmentHud"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:weightSum="1">

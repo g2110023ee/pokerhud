@@ -3,6 +3,7 @@ package club.bluegem.pokerhud
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,10 @@ import android.widget.Button
 import club.bluegem.pokerhud.databinding.FragmentHudBinding
 import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
 import kotlinx.android.synthetic.main.fragment_hud.*
+import java.io.Serializable
 
-class Fragment_Hud : Fragment() {
+class FragmentHud : Fragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_hud, container, false)
@@ -22,14 +25,21 @@ class Fragment_Hud : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
     }
+
+    override fun onDetach() {
+        super.onDetach()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
     override fun onActivityCreated(savedInstanceState: Bundle?)  {
         super.onActivityCreated(savedInstanceState)
         //Handカウントの初期化
         val playHand = Hand()
         //Bindingの起動（Handカウント用）
-        val binding : FragmentHudBinding = FragmentHudBinding.bind(view)
-        binding.hand= playHand
-
+        val binding: FragmentHudBinding = FragmentHudBinding.bind(view)
+        binding.hand = playHand
         /*
         ** TODO:
         ** Playerの最大人数はgetMaxPlayer()をコールすることで取得するように修正（済）
@@ -40,11 +50,6 @@ class Fragment_Hud : Fragment() {
         for (i in 2..maxPlayer) {
             players.add(Player(seatNumber = "$i"))
         }
-
-        //TEST用のコード
-        players[1].playerStatus = true
-        players[8].playerStatus = true
-
         //HudAdapterによりPlayerListをList化
         val adapter = HudAdapter(context, players)
         PlayerList.adapter = adapter
@@ -52,16 +57,16 @@ class Fragment_Hud : Fragment() {
         //Buttonのそれぞれ機能
         //Reset all
         val reset_button: Button = button_reset
-        reset_button.setOnClickListener { v ->
-            playHand.resetHand()
+        reset_button.setOnClickListener {
             playerResetHand(players)
+            playHand.resetHand()
             binding.hand= playHand
             adapter.notifyDataSetChanged()
         }
 
         //Next hand
         val next_button: Button = button_nexthand
-        next_button.setOnClickListener { v ->
+        next_button.setOnClickListener {
             playHand.addHand()
             playerNextHand(players)
             binding.hand= playHand
@@ -78,7 +83,7 @@ class Fragment_Hud : Fragment() {
      * @return maxPlayer: 設定上の最大人数
      ***/
     fun getMaxPlayer(): Int {
-        val maxPlayer = 9
+        val maxPlayer = 3
         return maxPlayer
     }
 
@@ -90,13 +95,12 @@ class Fragment_Hud : Fragment() {
      *
      */
     fun playerNextHand(player: List<Player>) {
-        for (i in 0..player.size - 1) if (player[i].playerStatus) {
-            player[i].addHand()
-            player[i].calc()
-            if (player[i].dealerButton) {
-                player[i].addDealerButton()
+        player.forEach { it->
+            if(it.playerStatus){
+                it.addHand()
+                it.calc()
+                if(it.dealerButton)it.addDealerButton()
             }
-
         }
     }
 
@@ -106,7 +110,10 @@ class Fragment_Hud : Fragment() {
      *  @param player: Player型のListを要求します
      */
     fun playerResetHand(player: List<Player>) {
-        for (i in 0..player.size - 1) player[i].resetAll()
+        player.forEach {
+            it.resetAll()
+            it.isNeedReset =false
+        }
     }
 
     /***
@@ -132,12 +139,28 @@ class Fragment_Hud : Fragment() {
                 binding = convertView.tag as ListviewHuditemBinding
             }
             binding?.player = getItem(position)
-            //Go to Result activity
-            binding?.toggleCall?.setOnCheckedChangeListener { _, _ -> players[position].addCalledHand() }
-            binding?.toggleRaise?.setOnCheckedChangeListener { _, _ ->
-                players[position].addRaisedHand()
-                if (players[position].dealerButton) players[position].addDealerButtonRaised()
+            if(!players[position].playerStatus && binding?.switchSeated?.isChecked==true) binding?.switchSeated?.isChecked=false
+            binding?.switchSeated?.setOnCheckedChangeListener { _, _ ->
+                if(players[position].isNeedReset) players[position].changeStatus()
             }
+            binding?.toggleCall?.setOnClickListener {
+                if(players[position].playerStatus&&!players[position].isPlayed) {
+                    players[position].information="Called"
+                    players[position].isPlayed=true
+                    players[position].addCalledHand()
+                    notifyDataSetChanged()
+                }
+            }
+            binding?.toggleRaise?.setOnClickListener {
+                if (players[position].playerStatus&&!players[position].isPlayed) {
+                    players[position].information="Raised"
+                    players[position].isPlayed=true
+                    players[position].addRaisedHand()
+                    if (players[position].dealerButton) players[position].addDealerButtonRaised()
+                    notifyDataSetChanged()
+            }
+            }
+            if(!players[position].isNeedReset) players[position].isNeedReset = true
             return binding?.root
         }
     }

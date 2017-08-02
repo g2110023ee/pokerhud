@@ -1,6 +1,6 @@
 package club.bluegem.pokerhud
 
-/****
+/**
  * Playerの情報を全て管理するデータクラス
  */
 data class Player(
@@ -8,14 +8,17 @@ data class Player(
         var dealerButton: Boolean = false,
         var playerStatus: Boolean = false,
         var whoIsMe: Boolean = false,
-        var playedHandCount: String = "0",
+        var isNeedReset:Boolean = true,
+        var isPlayed:Boolean = false,
+        var playedHandCount: Int = 0,
         var calledHandCount: Int = 0,
         var raisedHandCount: Int = 0,
         var dealerButtonCount: Int = 0,
         var dealerButtonRaisedCount: Int = 0,
-        var vpipCalculation: String ="0",
-        var pfrCalculation: String = "0",
-        var blindstealCalculation: String = "0"
+        var vpipCalculation: Float = 0.0f,
+        var pfrCalculation: Float = 0.0f,
+        var blindstealCalculation: Float = 0.0f,
+        var information: String =""
 
 ) {
 
@@ -23,10 +26,7 @@ data class Player(
      * 着席ステータスの変更に利用する
      */
     fun changeStatus(){
-        when(this.playerStatus){
-            true -> this.playerStatus = false
-            false -> this.playerStatus = true
-        }
+        this.playerStatus=!this.playerStatus
     }
     /**
      * プレーヤーのプレイハンド数をインクリメントするメソッド
@@ -34,7 +34,11 @@ data class Player(
      * 一旦Int型にキャストしてインクリメントしてから再度Stringに変換
      */
     fun addHand(){
-        this.playedHandCount = (this.playedHandCount.toInt()+1).toString()
+        this.playedHandCount++
+        this.isPlayed=false
+        information = ""
+        if(whoIsMe)
+            information = "You(Player)"
     }
 
     fun addCalledHand(){
@@ -56,22 +60,22 @@ data class Player(
      * PFR=レイズしたハンド数／総ハンド数
      * BlindSteal=ディーラーボタンでレイズしたハンド数/ディーラーボタン回数
      *
-     */
+     **/
     fun calc() {
         //VPIP
         val calcedVpip =
                 ((calledHandCount + raisedHandCount)/(playedHandCount.toFloat())) * 100
-        vpipCalculation = String.format("%.2f",calcedVpip)
+        vpipCalculation = calcedVpip
 
         //Pre-Flop-Raise
         val calcedPfr =
                 ((raisedHandCount)/(playedHandCount.toFloat())) * 100
-        pfrCalculation = String.format("%.2f",calcedPfr)
+        pfrCalculation = calcedPfr
         //BlindSteal
         if(dealerButtonCount != 0) {
             val calcedBlindsteal =
                     (dealerButtonRaisedCount / dealerButtonCount.toFloat()) * 100
-            blindstealCalculation = String.format("%.2f",calcedBlindsteal)
+            blindstealCalculation = calcedBlindsteal
         }
     }
 
@@ -80,14 +84,18 @@ data class Player(
      */
     fun resetAll(){
         playerStatus = false
-        playedHandCount = "0"
+        playedHandCount = 0
         calledHandCount = 0
         raisedHandCount = 0
         dealerButtonCount = 0
         dealerButtonRaisedCount = 0
-        vpipCalculation = "0"
-        pfrCalculation = "0"
-        blindstealCalculation = "0"
+        vpipCalculation = 0.0f
+        pfrCalculation = 0.0f
+        blindstealCalculation = 0.0f
+        isNeedReset =false
+        information =""
+        if(whoIsMe)
+            information = "You(Player)"
     }
 
 }

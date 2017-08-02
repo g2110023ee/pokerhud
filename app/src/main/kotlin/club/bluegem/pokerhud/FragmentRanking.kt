@@ -6,14 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-class Fragment_Config : Fragment() {
+class FragmentRanking : Fragment() {
     companion object {
-        fun getInstance(): Fragment_Config {
-            return Fragment_Config()
+        fun getInstance(): FragmentRanking {
+            return FragmentRanking()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_config, container, false)
+        return inflater.inflate(R.layout.fragment_ranking, container, false)
     }
 }

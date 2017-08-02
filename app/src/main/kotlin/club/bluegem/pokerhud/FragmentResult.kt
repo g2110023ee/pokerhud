@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_result.*
 
 
-class Fragment_Result : Fragment() {
+class FragmentResult : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
