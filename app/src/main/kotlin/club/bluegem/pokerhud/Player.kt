@@ -21,7 +21,6 @@ data class Player(
         var information: String =""
 
 ) {
-
     /***
      * 着席ステータスの変更に利用する
      */
@@ -37,8 +36,9 @@ data class Player(
         this.playedHandCount++
         this.isPlayed=false
         information = ""
-        if(whoIsMe)
-            information = "You(Player)"
+        if(whoIsMe) information = "You(Player)"
+        if(dealerButton) information = "Button"
+        if(whoIsMe&&dealerButton) information = "You are Button"
     }
 
     fun addCalledHand(){
@@ -94,8 +94,18 @@ data class Player(
         blindstealCalculation = 0.0f
         isNeedReset =false
         information =""
-        if(whoIsMe)
+        if(whoIsMe){
             information = "You(Player)"
+            playerStatus = true
+        }
+        if(dealerButton){
+            information = "Button"
+            playerStatus = true
+        }
+        if(whoIsMe&&dealerButton){
+            information = "You are Button"
+            playerStatus = true
+        }
     }
 
 }

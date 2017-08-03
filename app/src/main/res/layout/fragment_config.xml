@@ -23,5 +23,113 @@
             android:textAlignment="center"
             android:text="@string/text_conf"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_conf_players"/>
+        <Button
+            android:id="@+id/conf_max_dis"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:text="@string/text_conf_dis" />
+        <TextView
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_conf_seat"/>
+        <TextView
+            android:id="@+id/text_maxplayer"
+            android:layout_marginEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_defaultPlayer"/>
+        <Button
+            android:id="@+id/conf_max_add"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:text="@string/text_conf_add" />
+    </LinearLayout>
+
+    <!-- Player Position -->
+    <LinearLayout
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_conf_you"/>
+        <Button
+            android:id="@+id/conf_you_dis"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:text="@string/text_conf_dis" />
+        <TextView
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_conf_seat"/>
+        <TextView
+            android:id="@+id/text_player_position"
+            android:layout_marginEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_defaultPosition"/>
+        <Button
+            android:id="@+id/conf_you_add"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:text="@string/text_conf_add" />
+    </LinearLayout>
+
+    <!-- Button -->
+    <LinearLayout
+    android:layout_marginTop="40dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/text_conf_button"/>
+    <Button
+        android:id="@+id/conf_button_dis"
+        android:layout_width="30dp"
+        android:layout_height="35dp"
+        android:text="@string/text_conf_dis" />
+    <TextView
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/text_conf_seat"/>
+    <TextView
+        android:id="@+id/text_button_position"
+        android:layout_marginEnd="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/text_defaultPosition"
+        />
+    <Button
+        android:id="@+id/conf_button_add"
+        android:layout_width="30dp"
+        android:layout_height="35dp"
+        android:text="@string/text_conf_add" />
+</LinearLayout>
+
 
 </LinearLayout>

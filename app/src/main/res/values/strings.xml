@@ -32,6 +32,15 @@
     <string name="text_ranking">RANKING</string>
     <string name="text_conf">Configuration of Application</string>
 
+    <!-- Conf text-->
+    <string name="text_conf_players">How many players?</string>
+    <string name="text_conf_dis">-</string>
+    <string name="text_conf_seat">seat</string>
+    <string name="text_conf_add">+</string>
+    <string name="text_conf_you">Where are you?</string>
+    <string name="text_conf_button">Where is Button?</string>
+
+    <!-- Sign up text -->
     <string name="singup_intro1">Hi!  </string>
     <string name="singup_intro2">Welcome to Poker HUD Application\nWould you sign up our service please.</string>
     <string name="singup_playername">What you\'er player name?\n(alphabet and numbers only)</string>
@@ -40,8 +49,8 @@
     <string name="facebook_app_id">238224876690058</string>
     <string name="fb_login_protocol_scheme">fb238224876690058</string>
     <string name="text_preparelogo">なんかロゴか何か</string>
-
-
+    <string name="text_defaultPlayer">9</string>
+    <string name="text_defaultPosition">1</string>
 
 
 </resources>

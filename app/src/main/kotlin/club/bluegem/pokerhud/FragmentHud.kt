@@ -1,6 +1,7 @@
 package club.bluegem.pokerhud
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -14,8 +15,8 @@ import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
 import kotlinx.android.synthetic.main.fragment_hud.*
 import java.io.Serializable
 
-class FragmentHud : Fragment() {
-
+class FragmentHud() : Fragment() {
+    var saveStatus:Bundle? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.fragment_hud, container, false)
@@ -31,6 +32,7 @@ class FragmentHud : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+
         super.onSaveInstanceState(outState)
     }
     override fun onActivityCreated(savedInstanceState: Bundle?)  {
@@ -45,15 +47,20 @@ class FragmentHud : Fragment() {
         ** Playerの最大人数はgetMaxPlayer()をコールすることで取得するように修正（済）
         ** Conf画面からMaxPlayerの値を変更できるように実装する
         **/
-        val maxPlayer = getMaxPlayer()
+        val confMap = getConfig()
+        val maxPlayer = confMap["MaxPlayer"] as Int
+        val playerPosition = confMap["PlayerPosition"] as Int
+        val buttonPosition = confMap["ButtonPosition"] as Int
         val players: MutableList<Player> = mutableListOf(Player(seatNumber = "1"))
         for (i in 2..maxPlayer) {
             players.add(Player(seatNumber = "$i"))
         }
+        setDealerPlayer(playerPosition,buttonPosition,players)
+        playerResetHand(players)
         //HudAdapterによりPlayerListをList化
         val adapter = HudAdapter(context, players)
         PlayerList.adapter = adapter
-
+        adapter.notifyDataSetChanged()
         //Buttonのそれぞれ機能
         //Reset all
         val reset_button: Button = button_reset
@@ -67,6 +74,8 @@ class FragmentHud : Fragment() {
         //Next hand
         val next_button: Button = button_nexthand
         next_button.setOnClickListener {
+            saveStatus?.putSerializable("player",players as Serializable)
+            Log.d("Serializable",saveStatus.toString())
             playHand.addHand()
             playerNextHand(players)
             binding.hand= playHand
@@ -74,17 +83,31 @@ class FragmentHud : Fragment() {
         }
     }
 
+    private fun  setDealerPlayer(playerPosition: Int, buttonPosition: Int, players: MutableList<Player>) {
+        for(i in 0..players.lastIndex){
+            if((i+1)==playerPosition){
+                players[i].whoIsMe=true
+                players[i].playerStatus =true
+            }
+            if((i+1)==buttonPosition){
+                players[i].dealerButton=true
+                players[i].playerStatus =true
+            }
+        }
+    }
+
     /***
      * 設定ファイルから最大プレーヤー数を取得するメソッド
-     * 現在はハードコーディング
-     * TODO:
-     * 設定画面を実装の上、設定から取得できるようにする
      *
-     * @return maxPlayer: 設定上の最大人数
+     * @return confMap: 設定情報
      ***/
-    fun getMaxPlayer(): Int {
-        val maxPlayer = 3
-        return maxPlayer
+    fun getConfig(): Map<String, Int> {
+        val data: SharedPreferences = this.activity.getSharedPreferences("config", Context.MODE_PRIVATE)
+        val maxPlayer = data.getInt("MaxPlayer",9)
+        val playerPosition = data.getInt("PlayerPosition",1)
+        val buttonPosition = data.getInt("ButtonPosition",1)
+        val confMap = mapOf("MaxPlayer" to maxPlayer, "PlayerPosition" to playerPosition,"ButtonPosition" to buttonPosition)
+        return confMap
     }
 
     /***
@@ -95,6 +118,7 @@ class FragmentHud : Fragment() {
      *
      */
     fun playerNextHand(player: List<Player>) {
+        checkDealerButtonStatus(player)
         player.forEach { it->
             if(it.playerStatus){
                 it.addHand()
@@ -102,8 +126,32 @@ class FragmentHud : Fragment() {
                 if(it.dealerButton)it.addDealerButton()
             }
         }
+
     }
 
+    fun checkDealerButtonStatus(player: List<Player>) {
+        for (i in 0..player.lastIndex) {
+            if (player[i].dealerButton) {
+                for (j in i..player.lastIndex) {
+                    if (j == player.lastIndex) {
+                        for (k in 0..i) {
+                            if (player[k].playerStatus) {
+                                player[i].dealerButton = false
+                                player[k].dealerButton = true
+                                return
+                            }
+                        }
+                    } else {
+                        if (player[j + 1].playerStatus) {
+                            player[i].dealerButton = false
+                            player[j + 1].dealerButton = true
+                            return
+                        }
+                    }
+                }
+            }
+        }
+    }
     /***
      * ハンド履歴をリセットするときの処理を全て代行するメソッド
      * ・各プレーヤーのハンド履歴を葬ります
@@ -140,6 +188,8 @@ class FragmentHud : Fragment() {
             }
             binding?.player = getItem(position)
             if(!players[position].playerStatus && binding?.switchSeated?.isChecked==true) binding?.switchSeated?.isChecked=false
+            if(players[position].playerStatus && players[position].whoIsMe&& binding?.switchSeated?.isChecked==false) binding?.switchSeated?.isChecked=true
+            if(players[position].playerStatus && players[position].dealerButton&& binding?.switchSeated?.isChecked==false) binding?.switchSeated?.isChecked=true
             binding?.switchSeated?.setOnCheckedChangeListener { _, _ ->
                 if(players[position].isNeedReset) players[position].changeStatus()
             }
