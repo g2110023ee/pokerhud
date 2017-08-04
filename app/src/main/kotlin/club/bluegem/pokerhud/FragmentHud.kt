@@ -14,6 +14,7 @@ import club.bluegem.pokerhud.databinding.FragmentHudBinding
 import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
 import kotlinx.android.synthetic.main.fragment_hud.*
 import java.io.Serializable
+import java.util.*
 
 class FragmentHud() : Fragment() {
     var saveStatus:Bundle? = null
@@ -38,7 +39,7 @@ class FragmentHud() : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?)  {
         super.onActivityCreated(savedInstanceState)
         //Handカウントの初期化
-        val playHand = Hand()
+        val playHand = Hand(handID = UUID.randomUUID().toString())
         //Bindingの起動（Handカウント用）
         val binding: FragmentHudBinding = FragmentHudBinding.bind(view)
         binding.hand = playHand

@@ -3,9 +3,11 @@ package club.bluegem.pokerhud
 import android.support.v4.app.FragmentTransaction
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import io.realm.Realm
 
 class HudMainActivity :  FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        Realm.init(this);
         super.onCreate(savedInstanceState)
         setContentView(R.layout.hud_main)
 
