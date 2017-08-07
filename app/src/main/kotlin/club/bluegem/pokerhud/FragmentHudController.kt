@@ -12,14 +12,13 @@ class FragmentHudController : Fragment() {
     var currentFragment="Hud"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.fragment_hudadapter, container, false)
-        childFragmentManager.beginTransaction().add(R.id.fragmenthudadapter, FragmentHud()).commit()
-        return view
+        return inflater.inflate(R.layout.fragment_hudadapter, container, false)
     }
 
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        childFragmentManager.beginTransaction().add(R.id.fragmenthudadapter, FragmentHud()).commit()
         textbutton_hud.setOnClickListener {
             if(currentFragment!="Hud") childFragmentManager.beginTransaction().replace(R.id.fragmenthudadapter, FragmentHud()).commit()
             currentFragment="Hud"

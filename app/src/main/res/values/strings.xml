@@ -31,6 +31,7 @@
     <string name="text_3bet">Info : </string>
     <string name="text_ranking">RANKING</string>
     <string name="text_conf">Configuration of Application</string>
+    <string name="text_date">DATE</string>
 
     <!-- Conf text-->
     <string name="text_conf_players">How many players?</string>

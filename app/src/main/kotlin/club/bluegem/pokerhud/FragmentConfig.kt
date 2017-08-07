@@ -35,8 +35,14 @@ class FragmentConfig : Fragment() {
                 currentMax -= 1
                 text_maxplayer.text = currentMax.toString()
                 setSharedPref("MaxPlayer", currentMax)
-                if ((currentMax) <= text_player_position.text.toString().toInt()) text_player_position.text = (currentMax).toString()
-                if ((currentMax) <= text_button_position.text.toString().toInt()) text_button_position.text = (currentMax).toString()
+                if ((currentMax) <= text_player_position.text.toString().toInt()) {
+                    text_player_position.text = (currentMax).toString()
+                    setSharedPref("PlayerPosition", currentMax)
+                }
+                if ((currentMax) <= text_button_position.text.toString().toInt()) {
+                    text_button_position.text = (currentMax).toString()
+                    setSharedPref("ButtonPosition", currentMax)
+                }
             }
         }
         conf_you_add.setOnClickListener {

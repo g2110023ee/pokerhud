@@ -8,7 +8,7 @@ import org.junit.Assert.*
  * Created by 01020409 on 2017/07/31.
  */
 class PlayerTest {
-    val player:Player =  Player("1")
+    val player:Player =  Player(1)
     @Test
     fun changeStatus() {
         assertFalse(player.playerStatus)

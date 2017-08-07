@@ -12,8 +12,10 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import club.bluegem.pokerhud.databinding.FragmentHudBinding
 import club.bluegem.pokerhud.databinding.ListviewHuditemBinding
+import io.realm.Realm
 import kotlinx.android.synthetic.main.fragment_hud.*
 import java.io.Serializable
+import java.util.*
 
 class FragmentHud() : Fragment() {
     var saveStatus:Bundle? = null
@@ -38,7 +40,7 @@ class FragmentHud() : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?)  {
         super.onActivityCreated(savedInstanceState)
         //Handカウントの初期化
-        val playHand = Hand()
+        val playHand = Hand(handID = UUID.randomUUID().toString())
         //Bindingの起動（Handカウント用）
         val binding: FragmentHudBinding = FragmentHudBinding.bind(view)
         binding.hand = playHand
@@ -51,10 +53,8 @@ class FragmentHud() : Fragment() {
         val maxPlayer = confMap["MaxPlayer"] as Int
         val playerPosition = confMap["PlayerPosition"] as Int
         val buttonPosition = confMap["ButtonPosition"] as Int
-        val players: MutableList<Player> = mutableListOf(Player(seatNumber = "1"))
-        for (i in 2..maxPlayer) {
-            players.add(Player(seatNumber = "$i"))
-        }
+        val players: MutableList<Player> = mutableListOf(Player(seatNumber = 1))
+        (2..maxPlayer).forEach { players.add(Player(seatNumber = it)) }
         setDealerPlayer(playerPosition,buttonPosition,players)
         playerResetHand(players)
         //HudAdapterによりPlayerListをList化
@@ -77,7 +77,7 @@ class FragmentHud() : Fragment() {
             saveStatus?.putSerializable("player",players as Serializable)
             Log.d("Serializable",saveStatus.toString())
             playHand.addHand()
-            playerNextHand(players)
+            playerNextHand(players,playHand.handID)
             binding.hand= playHand
             adapter.notifyDataSetChanged()
         }
@@ -117,34 +117,51 @@ class FragmentHud() : Fragment() {
      *  @param player: Player型のListを要求します
      *
      */
-    fun playerNextHand(player: List<Player>) {
+    fun playerNextHand(player: List<Player>, handID: String) {
         checkDealerButtonStatus(player)
-        player.forEach { it->
+        player.forEach {
             if(it.playerStatus){
                 it.addHand()
                 it.calc()
-                if(it.dealerButton)it.addDealerButton()
+                if(it.dealerButton) it.addDealerButton()
+                if(it.whoIsMe) updateUserResult(handID,it)
             }
         }
 
     }
 
-    fun checkDealerButtonStatus(player: List<Player>) {
-        for (i in 0..player.lastIndex) {
-            if (player[i].dealerButton) {
-                for (j in i..player.lastIndex) {
-                    if (j == player.lastIndex) {
+    fun updateUserResult(handID: String,player:Player){
+        val realm = Realm.getDefaultInstance()
+        realm.use { realm ->
+            realm.executeTransaction {
+                val realmDbObj:ResultHolder = ResultHolder()
+                realmDbObj.handID = handID
+                realmDbObj.playedHandCount = player.playedHandCount
+                realmDbObj.vpipCalculation = player.vpipCalculation
+                realmDbObj.pfrCalculation = player.pfrCalculation
+                realmDbObj.blindstealCalculation = player.blindstealCalculation
+                realm.copyToRealmOrUpdate(realmDbObj)
+            }
+        }
+
+    }
+
+    fun checkDealerButtonStatus(players: List<Player>) {
+        for (i in 0..players.lastIndex) {
+            if (players[i].dealerButton) {
+                for (j in i..players.lastIndex) {
+                    if (j == players.lastIndex) {
                         for (k in 0..i) {
-                            if (player[k].playerStatus) {
-                                player[i].dealerButton = false
-                                player[k].dealerButton = true
+                            if (players[k].playerStatus) {
+                                players[i].dealerButton = false
+                                players[k].dealerButton = true
                                 return
                             }
                         }
                     } else {
-                        if (player[j + 1].playerStatus) {
-                            player[i].dealerButton = false
-                            player[j + 1].dealerButton = true
+                        if (players[j + 1].playerStatus) {
+                            players[i].dealerButton = false
+                            players[j + 1].dealerButton = true
                             return
                         }
                     }
@@ -180,6 +197,7 @@ class FragmentHud() : Fragment() {
          * CallとRaiseのボタン処理をどうするか考える
          */
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
+
             if (convertView == null) {
                 binding = ListviewHuditemBinding.inflate(inflater, parent, false)
                 binding?.root?.tag = binding
@@ -187,30 +205,31 @@ class FragmentHud() : Fragment() {
                 binding = convertView.tag as ListviewHuditemBinding
             }
             binding?.player = getItem(position)
-            if(!players[position].playerStatus && binding?.switchSeated?.isChecked==true) binding?.switchSeated?.isChecked=false
-            if(players[position].playerStatus && players[position].whoIsMe&& binding?.switchSeated?.isChecked==false) binding?.switchSeated?.isChecked=true
-            if(players[position].playerStatus && players[position].dealerButton&& binding?.switchSeated?.isChecked==false) binding?.switchSeated?.isChecked=true
+            val seatedPlayer = players[position]
+            if(!seatedPlayer.playerStatus && binding?.switchSeated?.isChecked==true) binding?.switchSeated?.isChecked=false
+            if(seatedPlayer.playerStatus && seatedPlayer.whoIsMe&& binding?.switchSeated?.isChecked==false) binding?.switchSeated?.isChecked=true
+            if(seatedPlayer.playerStatus && seatedPlayer.dealerButton&& binding?.switchSeated?.isChecked==false) binding?.switchSeated?.isChecked=true
             binding?.switchSeated?.setOnCheckedChangeListener { _, _ ->
-                if(players[position].isNeedReset) players[position].changeStatus()
+                if(seatedPlayer.isNeedReset) seatedPlayer.changeStatus()
             }
             binding?.toggleCall?.setOnClickListener {
-                if(players[position].playerStatus&&!players[position].isPlayed) {
-                    players[position].information="Called"
-                    players[position].isPlayed=true
-                    players[position].addCalledHand()
+                if(seatedPlayer.playerStatus&&!seatedPlayer.isPlayed) {
+                    seatedPlayer.information="Called"
+                    seatedPlayer.isPlayed=true
+                    seatedPlayer.addCalledHand()
                     notifyDataSetChanged()
                 }
             }
             binding?.toggleRaise?.setOnClickListener {
-                if (players[position].playerStatus&&!players[position].isPlayed) {
-                    players[position].information="Raised"
-                    players[position].isPlayed=true
-                    players[position].addRaisedHand()
-                    if (players[position].dealerButton) players[position].addDealerButtonRaised()
+                if (seatedPlayer.playerStatus&&!seatedPlayer.isPlayed) {
+                    seatedPlayer.information="Raised"
+                    seatedPlayer.isPlayed=true
+                    seatedPlayer.addRaisedHand()
+                    if (seatedPlayer.dealerButton) seatedPlayer.addDealerButtonRaised()
                     notifyDataSetChanged()
             }
             }
-            if(!players[position].isNeedReset) players[position].isNeedReset = true
+            if(!seatedPlayer.isNeedReset) seatedPlayer.isNeedReset = true
             return binding?.root
         }
     }

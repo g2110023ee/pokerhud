@@ -10,8 +10,7 @@ import android.view.ViewGroup
 class FragmentController : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.fragment_adapter, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_adapter, container, false)
     }
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -2,13 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "club.bluegem.pokerhud"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -41,13 +42,12 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-
-
     implementation 'com.google.firebase:firebase-core:10.2.1'
     implementation 'com.google.firebase:firebase-crash:10.2.1'
     implementation 'com.google.firebase:firebase-messaging:10.2.1'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'io.realm:android-adapters:2.0.0'
     testCompile 'junit:junit:4.12'
     kapt 'com.android.databinding:compiler:2.3.3'
 }
