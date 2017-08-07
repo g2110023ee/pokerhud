@@ -1,14 +1,10 @@
 package club.bluegem.pokerhud
 
-import android.os.AsyncTask
 import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 
-/**
- * Created by 01020409 on 2017/07/26.
- */
 open class TopModel{
 
     fun accessApiCheckUserStatus(facebookID:String):Boolean{
@@ -21,7 +17,7 @@ open class TopModel{
     }
 
     fun getRequest(url:String){
-        object: HttpController(){
+        object: AsyncController(){
             override fun doInBackground(vararg p0: Void?): String{
                 var res: String = ""
                 try{
@@ -36,6 +32,9 @@ open class TopModel{
                 return res
             }
         }.execute()
+
+    }
+    fun facebookLogin(){
 
     }
 }
