@@ -2,8 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="player"
-            type="club.bluegem.pokerhud.Player" />
+            name="result"
+            type="club.bluegem.pokerhud.ResultHolder" />
     </data>
 <LinearLayout
     android:baselineAligned="false"
@@ -20,24 +20,18 @@
         <LinearLayout
             android:layout_width="69dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_gravity="center_horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_seatnumber" />
+                android:text="@string/text_date" />
             <TextView
             android:id="@+id/text_playerposition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(player.seatNumber)}" />
+            android:text="@{String.valueOf(result.date)}" />
         </LinearLayout>
-        <Switch
-            android:id="@+id/switch_seated"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
     </LinearLayout>
 
     <!-- Player's data section-->
@@ -62,7 +56,7 @@
             android:id="@+id/text_palyedcount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(player.playedHandCount)}" />
+            android:text="@{String.valueOf(result.playedHandCount)}" />
         </LinearLayout>
         <!-- 2nd row, VPIP and PFR -->
         <LinearLayout
@@ -78,7 +72,7 @@
                 android:id="@+id/text_vpip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.format(`%.2f`,player.vpipCalculation)}"
+                android:text="@{String.format(`%.2f`,result.vpipCalculation)}"
                 android:layout_marginEnd="5dp"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -89,7 +83,7 @@
                 android:id="@+id/text_pfr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.format(`%.2f`,player.pfrCalculation)}"
+                android:text="@{String.format(`%.2f`,result.pfrCalculation)}"
                 />
             </LinearLayout>
 
@@ -107,39 +101,9 @@
                 android:id="@+id/text_blindsteal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{String.format(`%.2f`,player.blindstealCalculation)}"
+                android:text="@{String.format(`%.2f`,result.blindstealCalculation)}"
                 android:layout_marginEnd="5dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_3bet"
-                android:layout_marginStart="5dp"/>
-            <TextView
-                android:id="@+id/text_3bet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{player.information}" />
         </LinearLayout>
-    </LinearLayout>
-
-    <!-- Action section -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
-        <!-- Call section -->
-        <Button
-            android:text="@string/toggle_call"
-            android:id="@+id/toggle_call"
-            android:layout_width="70dp"
-            android:layout_height="35dp" />
-        <!-- Raise section -->
-            <Button
-                android:text="@string/toggle_raise"
-                android:id="@+id/toggle_raise"
-                android:layout_width="70dp"
-                android:layout_height="35dp"/>
     </LinearLayout>
 </LinearLayout>
 </layout>

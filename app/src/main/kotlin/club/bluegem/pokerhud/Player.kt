@@ -1,10 +1,12 @@
 package club.bluegem.pokerhud
 
+import io.realm.Realm
+
 /**
  * Playerの情報を全て管理するデータクラス
  */
 data class Player(
-        val seatNumber: String,
+        val seatNumber: Int,
         var dealerButton: Boolean = false,
         var playerStatus: Boolean = false,
         var whoIsMe: Boolean = false,
@@ -32,13 +34,13 @@ data class Player(
      * Bindingの制約でInt型が使えない為、
      * 一旦Int型にキャストしてインクリメントしてから再度Stringに変換
      */
-    fun addHand(){
+    fun addHand() {
         this.playedHandCount++
         this.isPlayed=false
-        information = ""
-        if(whoIsMe) information = "You(Player)"
-        if(dealerButton) information = "Button"
-        if(whoIsMe&&dealerButton) information = "You are Button"
+        this.information = ""
+        if(this.whoIsMe) this.information = "You(Player)"
+        if(this.dealerButton) this.information = "Button"
+        if(this.whoIsMe&&this.dealerButton) this.information = "You are Button"
     }
 
     fun addCalledHand(){
