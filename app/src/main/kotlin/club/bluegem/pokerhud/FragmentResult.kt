@@ -34,9 +34,9 @@ class FragmentResult : Fragment() {
                     .setTitle("Do you want to reset your result?")
                     .setMessage("You can not recover your result after reset")
                     .setPositiveButton("OK", { _, _ ->
-                        realm.use { realm ->
-                            realm.executeTransaction {
-                                realm.delete(ResultHolder::class.java)
+                        realm.use { realms ->
+                            realms.executeTransaction {
+                                realms.delete(ResultHolder::class.java)
 
                             }
                         }

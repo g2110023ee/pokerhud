@@ -16,13 +16,18 @@ class HudMainActivity :  FragmentActivity() {
         setContentView(R.layout.hud_main)
 
         //test
-        this.getRequest()
-        val topFragment: FragmentController = FragmentController()
-        val topTransaction:FragmentTransaction = getSupportFragmentManager().beginTransaction()
-        topTransaction.add(R.id.maincontainer,topFragment)
-        topTransaction.commit()
-
+        val model = TopModel()
+        //Check user status
+        if(model.getUser(this)==false) {
+            val topFragment: FragmentController = FragmentController()
+            val topTransaction: FragmentTransaction = getSupportFragmentManager().beginTransaction()
+            topTransaction.add(R.id.maincontainer, topFragment)
+            topTransaction.commit()
+        }else{
+            this.getRequest()
+        }
     }
+
     fun getRequest(){
         val hudFragment: FragmentHudController = FragmentHudController()
         val hudTransaction:FragmentTransaction = getSupportFragmentManager().beginTransaction()

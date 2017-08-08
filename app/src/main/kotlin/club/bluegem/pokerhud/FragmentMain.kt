@@ -1,8 +1,10 @@
 package club.bluegem.pokerhud
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import java.util.*
 
 class FragmentMain : Fragment() {
     private var callbackManager: CallbackManager? = null
+    private var mainActivity:HudMainActivity? = null
     val topModel:TopModel = TopModel()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -40,7 +43,7 @@ class FragmentMain : Fragment() {
             override fun onSuccess(loginResult: LoginResult) {
                 val request = GraphRequest.newMeRequest(loginResult.accessToken) { _, Response ->
                     //ここから既存会員かのチェックをするメソッドに飛んで既存会員ならHUD、新規ならサインアップに飛ばす
-                    if(checkSignupStatus(Response.jsonObject.getString("id")))fragmentManager.beginTransaction().replace(R.id.fragmentadapter, FragmentSignup()).commit()
+                    if(checkSignupStatus(Response.jsonObject.getString("id"))) mainActivity?.getRequest()
                     jumpToSignupActivity(Response.jsonObject.getString("id"),Response.jsonObject.getString("first_name"))
                 }
                 //読み込んだデータを処理
@@ -63,9 +66,9 @@ class FragmentMain : Fragment() {
                 })
     }
 
-    private fun  checkSignupStatus(fbid: String?): Boolean {
-        val topModel:TopModel = TopModel()
-        return true
+    private fun  checkSignupStatus(fbid: String): Boolean {
+        topModel.accessApiCheckUserStatus(fbid)
+        return false
     }
 
 
@@ -73,9 +76,11 @@ class FragmentMain : Fragment() {
         val facebookBundle = Bundle()
         facebookBundle.putString("fbid",fbid)
         facebookBundle.putString("fbname",fbname)
-        val fragment_Signup: FragmentSignup = FragmentSignup()
-        fragment_Signup.arguments = facebookBundle
-        fragmentManager.beginTransaction().replace(R.id.fragmentadapter,fragment_Signup).commit()
+        val fragmentSignup: FragmentSignup = FragmentSignup()
+        fragmentSignup.arguments = facebookBundle
+        Log.d("facebookBundle",facebookBundle.toString())
+        Log.d("fragmentSignup",fragmentSignup.arguments.toString())
+        fragmentManager.beginTransaction().replace(R.id.fragmentadapter,fragmentSignup).commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -84,5 +89,10 @@ class FragmentMain : Fragment() {
     }
     override fun onDetach() {
         super.onDetach()
+    }
+
+    override fun onAttach(activity: Activity?) {
+        mainActivity = activity as HudMainActivity
+        super.onAttach(activity)
     }
 }

@@ -66,7 +66,7 @@ class FragmentHud() : Fragment() {
         val reset_button: Button = button_reset
         reset_button.setOnClickListener {
             playerResetHand(players)
-            playHand.resetHand()
+            playHand.resetHand(handID = UUID.randomUUID().toString())
             binding.hand= playHand
             adapter.notifyDataSetChanged()
         }
@@ -132,15 +132,15 @@ class FragmentHud() : Fragment() {
 
     fun updateUserResult(handID: String,player:Player){
         val realm = Realm.getDefaultInstance()
-        realm.use { realm ->
-            realm.executeTransaction {
+        realm.use { realms ->
+            realms.executeTransaction {
                 val realmDbObj:ResultHolder = ResultHolder()
                 realmDbObj.handID = handID
                 realmDbObj.playedHandCount = player.playedHandCount
                 realmDbObj.vpipCalculation = player.vpipCalculation
                 realmDbObj.pfrCalculation = player.pfrCalculation
                 realmDbObj.blindstealCalculation = player.blindstealCalculation
-                realm.copyToRealmOrUpdate(realmDbObj)
+                realms.copyToRealmOrUpdate(realmDbObj)
             }
         }
 

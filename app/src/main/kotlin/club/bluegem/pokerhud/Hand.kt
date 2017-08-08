@@ -11,8 +11,8 @@ data class Hand(var handCount:Int = 1,var handID:String ){
     fun addHand(){
         handCount++
     }
-    fun resetHand(){
+    fun resetHand(handID:String){
         handCount = 1
-        handID = UUID.randomUUID().toString()
+        this.handID = handID
     }
 }
