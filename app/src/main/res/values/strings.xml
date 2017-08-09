@@ -21,7 +21,7 @@
     <!-- Normal Text -->
     <string name="text_topmenu">Select menu!!!!</string>
     <string name="text_hand">HANDS : </string>
-    <string name="text_facebooklogin">Facebook Login</string>
+    <string name="text_facebooklogin">Login with Facebook</string>
     <string name="text_result">Your Total Status</string>
     <string name="text_seatnumber">Seat : </string>
     <string name="text_playedhand">Played Hands : </string>
@@ -54,6 +54,7 @@
     <string name="text_defaultPosition">1</string>
     <string name="text_logout">Do you want to logoff from service?</string>
     <string name="button_logof">Logout</string>
+    <string name="text_title">REAL HUD TRACKER</string>
 
 
 </resources>

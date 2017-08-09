@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.8.1'
     implementation 'io.realm:android-adapters:2.0.0'
     implementation 'com.beust:klaxon:0.30'
+    implementation 'com.caverock:androidsvg:1.2.1'
     testCompile 'junit:junit:4.12'
     kapt 'com.android.databinding:compiler:2.3.3'
 }
