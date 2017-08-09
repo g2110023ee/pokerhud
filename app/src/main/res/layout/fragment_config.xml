@@ -129,7 +129,30 @@
         android:layout_width="30dp"
         android:layout_height="35dp"
         android:text="@string/text_conf_add" />
-</LinearLayout>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="304dp"
+        android:layout_marginTop="100dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:weightSum="1"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/text_logout"/>
+        <Button
+            android:id="@+id/button_signout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_logof" />
+    </LinearLayout>
 
 
 </LinearLayout>

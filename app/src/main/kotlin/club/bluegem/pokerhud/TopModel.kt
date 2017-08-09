@@ -7,15 +7,19 @@ import android.util.Log
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import com.beust.klaxon.string
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import okhttp3.*
+import org.json.JSONObject
+
+
+
 
 open class TopModel{
+    val domain:String = "api.bluegem.club"
+    //val domain:String = "10.0.2.2"
 
     fun accessApiCheckUserStatus(facebookID:String){
-        //val url = "http://api.bluegem.club/v1/user?fid=$facebookID"
-        val url = "http://10.0.2.2/v1/user?fid=$facebookID"
+
+        val url = "http://$domain/v1/user?fid=$facebookID"
         getRequest(url)
     }
 
@@ -38,7 +42,7 @@ open class TopModel{
     fun jsonParseLoginCheck(response:String) : String{
         val parsed: JsonObject = Parser().parse(StringBuilder(response)) as JsonObject
         Log.d("AsyncController",parsed.toString())
-        val statusCode = parsed.string("status") ?: "400"
+        val statusCode = parsed.string("statusCode") ?: "400"
         Log.d("statusCode",statusCode)
         if(statusCode.equals("200")){
             val msg = parsed.get("msg") as JsonObject
@@ -48,9 +52,35 @@ open class TopModel{
         return statusCode
     }
 
-    fun facebookLogin(){
-
+    fun userSingUp(facebookID:String,userName:String){
+        val url = "http://$domain/v1/user"
+        postRequest(url,facebookID,userName)
     }
+
+    fun postRequest(url:String,facebookID:String,userName:String){
+        object: AsyncController(){
+            override fun doInBackground(vararg p0: Void?): String{
+                var statusCode = "400"
+                try{
+                    val client = OkHttpClient()
+                    val MIMEType = MediaType.parse("application/json; charset=utf-8")
+                    val requestBody = RequestBody.create(MIMEType, "{\"fbid\":\"$facebookID\",\"username\":\"$userName\"}")
+                    val request = Request.Builder().url(url).post(requestBody).build()
+                    val res = JSONObject(client.newCall(request).execute().body()?.string())
+                    statusCode = res.getString("statusCode") ?: "400"
+                    Log.d("statusCode",statusCode)
+                }catch (e: Exception){
+                    Log.d("catchException",e.toString())
+                }
+                return statusCode
+            }
+            override fun onPostExecute(result: String?) {
+                super.onPostExecute(result)
+            }
+        }.execute()
+        return
+    }
+
     /***
      * 設定ファイルから最大プレーヤー数を取得するメソッド
      * 現在はハードコーディング

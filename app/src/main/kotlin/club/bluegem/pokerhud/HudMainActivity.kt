@@ -14,25 +14,28 @@ class HudMainActivity :  FragmentActivity() {
         Realm.setDefaultConfiguration(RealmConfiguration.Builder().build())
         super.onCreate(savedInstanceState)
         setContentView(R.layout.hud_main)
-
         //test
         val model = TopModel()
         //Check user status
         if(model.getUser(this)==false) {
-            val topFragment: FragmentController = FragmentController()
-            val topTransaction: FragmentTransaction = getSupportFragmentManager().beginTransaction()
-            topTransaction.add(R.id.maincontainer, topFragment)
-            topTransaction.commit()
+            this.getHome()
         }else{
-            this.getRequest()
+            this.getHud()
         }
     }
 
-    fun getRequest(){
+    fun getHud(){
         val hudFragment: FragmentHudController = FragmentHudController()
         val hudTransaction:FragmentTransaction = getSupportFragmentManager().beginTransaction()
         hudTransaction.replace(R.id.maincontainer,hudFragment)
         hudTransaction.commit()
 
+    }
+
+    fun getHome() {
+        val topFragment: FragmentController = FragmentController()
+        val topTransaction:FragmentTransaction = getSupportFragmentManager().beginTransaction()
+        topTransaction.replace(R.id.maincontainer,topFragment)
+        topTransaction.commit()
     }
 }

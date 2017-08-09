@@ -1,5 +1,6 @@
 package club.bluegem.pokerhud
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_config.*
 
 class FragmentConfig : Fragment() {
+    private var mainActivity:HudMainActivity? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_config, container, false)
     }
@@ -25,7 +28,7 @@ class FragmentConfig : Fragment() {
         text_button_position.text = buttonPosition.toString()
 
         conf_max_add.setOnClickListener {
-            var currentMax = text_maxplayer.text.toString().toInt()
+            val currentMax = text_maxplayer.text.toString().toInt()
             text_maxplayer.text = (currentMax + 1).toString()
             setSharedPref("MaxPlayer", currentMax + 1)
         }
@@ -46,32 +49,36 @@ class FragmentConfig : Fragment() {
             }
         }
         conf_you_add.setOnClickListener {
-            var currentYour = text_player_position.text.toString().toInt()
+            val currentYour = text_player_position.text.toString().toInt()
             if (currentYour < text_maxplayer.text.toString().toInt()) {
                 setSharedPref("PlayerPosition", currentYour + 1)
                 text_player_position.text = (currentYour + 1).toString()
             }
         }
         conf_you_dis.setOnClickListener {
-            var currentYour = text_player_position.text.toString().toInt()
+            val currentYour = text_player_position.text.toString().toInt()
             if (currentYour > 1) {
                 setSharedPref("PlayerPosition", currentYour - 1)
                 text_player_position.text = (currentYour - 1).toString()
             }
         }
         conf_button_add.setOnClickListener {
-            var currentButton = text_button_position.text.toString().toInt()
+            val currentButton = text_button_position.text.toString().toInt()
             if (currentButton < text_maxplayer.text.toString().toInt()) {
                 setSharedPref("ButtonPosition", currentButton + 1)
                 text_button_position.text = (currentButton + 1).toString()
             }
         }
         conf_button_dis.setOnClickListener {
-            var currentButton = text_button_position.text.toString().toInt()
+            val currentButton = text_button_position.text.toString().toInt()
             if (currentButton > 1) {
                 setSharedPref("ButtonPosition", currentButton - 1)
                 text_button_position.text = (currentButton - 1).toString()
             }
+        }
+        button_signout.setOnClickListener {
+            clearLoginStatus()
+            mainActivity?.getHome()
         }
 
     }
@@ -85,11 +92,8 @@ class FragmentConfig : Fragment() {
 
     /***
      * 設定ファイルから最大プレーヤー数を取得するメソッド
-     * 現在はハードコーディング
-     * TODO:
-     * 設定画面を実装の上、設定から取得できるようにする
      *
-     * @return maxPlayer: 設定上の最大人数
+     * @return confMap: 設定上の最大人数
      ***/
     fun getConfig(): Map<String, Int> {
         val data: SharedPreferences = this.activity.getSharedPreferences("config", Context.MODE_PRIVATE)
@@ -100,4 +104,18 @@ class FragmentConfig : Fragment() {
         return confMap
     }
 
+    /***
+     * 設定ファイルから最大プレーヤー数を取得するメソッド
+     * 現在はハードコーディング
+     ***/
+    fun clearLoginStatus(){
+        val data: SharedPreferences = this.activity.getSharedPreferences("config", Context.MODE_PRIVATE)
+        val editer: SharedPreferences.Editor = data.edit()
+        editer.putBoolean("status",false)
+        editer.apply()
+    }
+    override fun onAttach(activity: Activity?) {
+        mainActivity = activity as HudMainActivity
+        super.onAttach(activity)
+    }
 }

@@ -43,7 +43,7 @@ class FragmentMain : Fragment() {
             override fun onSuccess(loginResult: LoginResult) {
                 val request = GraphRequest.newMeRequest(loginResult.accessToken) { _, Response ->
                     //ここから既存会員かのチェックをするメソッドに飛んで既存会員ならHUD、新規ならサインアップに飛ばす
-                    if(checkSignupStatus(Response.jsonObject.getString("id"))) mainActivity?.getRequest()
+                    if(checkSignupStatus(Response.jsonObject.getString("id"))) mainActivity?.getHud()
                     jumpToSignupActivity(Response.jsonObject.getString("id"),Response.jsonObject.getString("first_name"))
                 }
                 //読み込んだデータを処理

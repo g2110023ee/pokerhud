@@ -52,6 +52,8 @@
     <string name="text_preparelogo">なんかロゴか何か</string>
     <string name="text_defaultPlayer">9</string>
     <string name="text_defaultPosition">1</string>
+    <string name="text_logout">Do you want to logoff from service?</string>
+    <string name="button_logof">Logout</string>
 
 
 </resources>
